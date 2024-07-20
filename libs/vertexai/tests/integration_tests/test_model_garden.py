@@ -125,6 +125,22 @@ def test_anthropic() -> None:
 
 
 @pytest.mark.extended
+def test_anthropic_timeout() -> None:
+    project = os.environ["PROJECT_ID"]
+    location = "us-central1"
+    model = ChatAnthropicVertex(
+        project=project,
+        location=location,
+        request_timeout=0.1
+    )
+    question = "Print pi with 400 decimals"
+    message = HumanMessage(content=question)
+    response = model.invoke([message], model_name="claude-3-sonnet@20240229")
+    assert isinstance(response, AIMessage)
+    assert isinstance(response.content, str)
+
+
+@pytest.mark.extended
 def test_anthropic_stream() -> None:
     project = os.environ["PROJECT_ID"]
     location = "us-central1"
@@ -161,6 +177,22 @@ async def test_anthropic_async() -> None:
     response = await model.ainvoke(
         [context, message], model_name="claude-3-sonnet@20240229", temperature=0.2
     )
+    assert isinstance(response, AIMessage)
+    assert isinstance(response.content, str)
+
+
+@pytest.mark.extended
+async def test_anthropic_async_timeout() -> None:
+    project = os.environ["PROJECT_ID"]
+    location = "us-central1"
+    model = ChatAnthropicVertex(
+        project=project,
+        location=location,
+        request_timeout=0.1
+    )
+    question = "Print pi with 400 decimals"
+    message = HumanMessage(content=question)
+    response = await model.ainvoke([message], model_name="claude-3-sonnet@20240229")
     assert isinstance(response, AIMessage)
     assert isinstance(response.content, str)
 

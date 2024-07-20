@@ -12,6 +12,7 @@ from typing import (
     Literal,
     Optional,
     Sequence,
+    Tuple,
     Type,
     Union,
 )
@@ -136,6 +137,9 @@ class ChatAnthropicVertex(_VertexAICommon, BaseChatModel):
     access_token: Optional[str] = None
     stream_usage: bool = True  # Whether to include usage metadata in streaming output
     credentials: Optional[Credentials] = None
+    request_timeout: Union[float, Tuple[float, float], Any, None] = Field(
+        default=None, alias="timeout"
+    )
 
     class Config:
         """Configuration for this pydantic object."""
@@ -159,6 +163,7 @@ class ChatAnthropicVertex(_VertexAICommon, BaseChatModel):
             max_retries=values["max_retries"],
             access_token=values["access_token"],
             credentials=values["credentials"],
+            timeout=values["request_timeout"],
         )
         values["async_client"] = AsyncAnthropicVertex(
             project_id=values["project"],
@@ -166,6 +171,7 @@ class ChatAnthropicVertex(_VertexAICommon, BaseChatModel):
             max_retries=values["max_retries"],
             access_token=values["access_token"],
             credentials=values["credentials"],
+            timeout=values["request_timeout"],
         )
         return values
 
